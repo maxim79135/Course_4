@@ -29,11 +29,11 @@ def l(N, p):
     return num / den
 
 
-t1 = p_n(0.4, 1, 2)
+t1 = p_n(3.2, 3, 4)
 print(round(t1, 4))
 
-t2 = p_n(1.6, 3, 2)
+t2 = p_n(1.2, 8, 4)
 print(round(t2, 4))
 
-t3 = l(2, 0.2)
+t3 = l(4, 0.075)
 print(round(t3, 7))
