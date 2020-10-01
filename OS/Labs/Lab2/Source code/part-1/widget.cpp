@@ -5,6 +5,8 @@
 #include <random>
 #include <string>
 #include <type_traits>
+#include <mutex>
+#include <condition_variable>
 
 #include <QDateTime>
 #include <QDebug>
@@ -25,31 +27,9 @@ inline I randRange(I a, I b) {
   return dist(e);
 }
 
-class PetersonMutex {
-private:
-  std::atomic_bool wants[2];
-
-  std::atomic_ullong waiting;
-
-public:
-  PetersonMutex() {
-    wants[0] = wants[1] = false;
-    waiting = 0;
-  }
-
-  void lock(size_t id) {
-    wants[id] = true;
-    size_t other = 1u - id;
-    waiting = id;
-
-    while (wants[other].load() && waiting.load() == id) {
-    }
-  }
-
-  void unlock(size_t id) { wants[id] = false; }
-};
-
-static PetersonMutex mutex;
+std::mutex m;
+std::atomic<bool> ready;
+std::condition_variable cv;
 
 static unsigned int timeout{2000}, timeout2{2000};
 
@@ -68,16 +48,17 @@ static void proc1() {
       str.push_back(c);
     }
 
-    mutex.lock(0);
+    std::unique_lock<std::mutex> lock(m);
+    while (!ready.load()) cv.wait(lock);
 
     std::ofstream out(path.toStdString(),
                       std::ios_base::out | std::ios_base::app);
     qDebug() << QString("Writing: %1").arg(QString::fromStdString(str));
     out << str << std::endl;
+    ready.store(true);
+    cv.notify_all();
     out.flush();
     out.close();
-
-    mutex.unlock(0);
 
     QThread::msleep(timeout);
   }
@@ -85,10 +66,11 @@ static void proc1() {
 
 static void proc2() {
   while (!needstostop) {
+    std::unique_lock<std::mutex> lock(m);
+    while (!ready.load()) cv.wait(lock);
+
     QFile file(path);
     auto size = file.size();
-
-    mutex.lock(1);
 
     std::ofstream out(path.toStdString(),
                       std::ios_base::out | std::ios_base::app);
@@ -98,10 +80,10 @@ static void proc2() {
             .arg(size);
     qDebug() << QString("Writing: %1").arg(str);
     out << str.toStdString() << std::endl;
+    ready.store(true);
+    cv.notify_all();
     out.flush();
     out.close();
-
-    mutex.unlock(1);
 
     QThread::msleep(timeout2);
   }
