@@ -19,9 +19,9 @@ public:
 private:
   Ui::Widget *ui;
 
-  std::thread* t1;
+  QFuture<void> t1;
 
-  std::thread* t2;
+  QFuture<void> t2;
 };
 
 #endif // WIDGET_H
