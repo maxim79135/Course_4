@@ -5,6 +5,8 @@
 #include <random>
 #include <string>
 #include <type_traits>
+#include <condition_variable>
+#include <mutex>
 
 #include <QDateTime>
 #include <QDebug>
@@ -25,31 +27,9 @@ inline I randRange(I a, I b) {
   return dist(e);
 }
 
-class PetersonMutex {
-private:
-  std::atomic_bool wants[2];
-
-  std::atomic_ullong waiting;
-
-public:
-  PetersonMutex() {
-    wants[0] = wants[1] = false;
-    waiting = 0;
-  }
-
-  void lock(size_t id) {
-    wants[id] = true;
-    size_t other = 1u - id;
-    waiting = id;
-
-    while (wants[other].load() && waiting.load() == id) {
-    }
-  }
-
-  void unlock(size_t id) { wants[id] = false; }
-};
-
-static PetersonMutex mutex;
+std::mutex m;
+std::condition_variable cv;
+bool ready, processed;
 
 static unsigned int timeout{2000}, timeout2{2000};
 
@@ -58,6 +38,23 @@ static bool needstostop;
 static QString path("output.txt");
 
 static void proc1() {
+    while (ready) {
+        std::unique_lock<std::mutex> lk(m);
+        cv.wait(lk, [] { return ready; });
+
+        QString data = "adasd";
+
+
+        processed = true;
+        qDebug() << data;
+
+        lk.unlock();
+        cv.notify_one();
+        QThread::msleep(timeout);
+    }
+}
+
+/*
   while (!needstostop) {
     size_t len = randRange(40u, 50u);
     std::string str;
@@ -80,9 +77,9 @@ static void proc1() {
     mutex.unlock(0);
 
     QThread::msleep(timeout);
-  }
-}
+  }*/
 
+/*
 static void proc2() {
   while (!needstostop) {
     QFile file(path);
@@ -105,7 +102,7 @@ static void proc2() {
 
     QThread::msleep(timeout2);
   }
-}
+}*/
 
 Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget) {
   ui->setupUi(this);
@@ -130,17 +127,34 @@ Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget) {
   out.flush();
   out.close();
 
-  t1 = QtConcurrent::run(&proc1);
-  t2 = QtConcurrent::run(&proc2);
+  t1 = new std::thread(proc1);
+
+  {
+    std::lock_guard<std::mutex> lk(m);
+    ready = true;
+  }
+
+  cv.notify_one();
+
+  {
+    std::unique_lock<std::mutex> lk(m);
+    cv.wait(lk, []{ return processed;} );
+  }
+
+  t1->join();
+  //t2 = QtConcurrent::run(&proc2);
 }
 
 Widget::~Widget() {
-  delete ui;
+    delete ui;
+    needstostop = true;
+
+    /*
   needstostop = true;
   if (t1.isRunning()) {
     t1.waitForFinished();
-  }
+  }s
   if (t2.isRunning()) {
     t2.waitForFinished();
-  }
+  }*/
 }

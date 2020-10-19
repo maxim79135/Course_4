@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QtConcurrent>
+#include <thread>
 
 namespace Ui {
 class Widget;
@@ -18,9 +19,9 @@ public:
 private:
   Ui::Widget *ui;
 
-  QFuture<void> t1;
+  std::thread* t1;
 
-  QFuture<void> t2;
+  std::thread* t2;
 };
 
 #endif // WIDGET_H
