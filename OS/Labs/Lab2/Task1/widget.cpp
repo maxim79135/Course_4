@@ -5,6 +5,7 @@
 #include <random>
 #include <string>
 #include <type_traits>
+#include <cmath>
 
 #include <QDateTime>
 #include <QDebug>
@@ -14,16 +15,6 @@
 
 #include "ui_widget.h"
 #include "widget.h"
-
-template <class I, typename = std::enable_if_t<std::is_integral_v<I>>>
-inline I randRange(I a, I b) {
-  if (a > b) {
-    std::swap(a, b);
-  }
-  static std::mt19937 e(static_cast<unsigned int>(std::time(nullptr)));
-  std::uniform_int_distribution<I> dist(a, b);
-  return dist(e);
-}
 
 class PetersonMutex {
 private:
@@ -55,26 +46,24 @@ static unsigned int timeout{2000}, timeout2{2000};
 
 static bool needstostop;
 
+static double x = 1;
+static int h = 1;
+static double z = 0;
+
 static QString path("output.txt");
 
 static void proc1() {
-  while (!needstostop) {
-    size_t len = randRange(40u, 50u);
-    std::string str;
-    str.reserve(len);
-
-    for (size_t i = 0; i < len; ++i) {
-      char c = static_cast<char>(randRange(65, 122));
-      str.push_back(c);
-    }
-
+  while (!needstostop && x <= 15) {
     mutex.lock(0);
 
+    double y = log(x) / 3;
+    x += h;
+    QString str = QString::number(y);
     std::ofstream out(path.toStdString(),
                       std::ios_base::out | std::ios_base::app);
-    qDebug() << QString("Writing: %1").arg(QString::fromStdString(str));
-    out << str << std::endl;
-    out.flush();
+    qDebug() << QString("Writing: x = %1, y = %2").arg(QString::number(x), str);
+    out << x;
+    //out.flush();
     out.close();
 
     mutex.unlock(0);
@@ -85,21 +74,15 @@ static void proc1() {
 
 static void proc2() {
   while (!needstostop) {
-    QFile file(path);
-    auto size = file.size();
-
     mutex.lock(1);
 
-    std::ofstream out(path.toStdString(),
-                      std::ios_base::out | std::ios_base::app);
-    auto str =
-        QString("%1; %2 bytes")
-            .arg(QDateTime::currentDateTime().toString("dd.MM.yyyy, HH:mm:ss"))
-            .arg(size);
-    qDebug() << QString("Writing: %1").arg(str);
-    out << str.toStdString() << std::endl;
-    out.flush();
-    out.close();
+    std::ifstream in(path.toStdString(),
+                      std::ios_base::in | std::ios_base::app);
+    double tmp;
+    in >> tmp;
+    in.close();
+
+    qDebug() << QString("Reading: %1").arg(QString::number(tmp));
 
     mutex.unlock(1);
 
