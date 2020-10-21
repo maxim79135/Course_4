@@ -48,7 +48,6 @@ static bool needstostop;
 
 static double x = 1;
 static int h = 1;
-static double z = 0;
 
 static QString path("output.txt");
 
@@ -57,13 +56,12 @@ static void proc1() {
     mutex.lock(0);
 
     double y = log(x) / 3;
-    x += h;
     QString str = QString::number(y);
-    std::ofstream out(path.toStdString(),
-                      std::ios_base::out | std::ios_base::app);
+    std::ofstream out;
     qDebug() << QString("Writing: x = %1, y = %2").arg(QString::number(x), str);
-    out << x;
-    //out.flush();
+    x += h;
+    out.open(path.toStdString(), std::ios_base::app);
+    out << y << "\n";
     out.close();
 
     mutex.unlock(0);
@@ -76,13 +74,19 @@ static void proc2() {
   while (!needstostop) {
     mutex.lock(1);
 
-    std::ifstream in(path.toStdString(),
-                      std::ios_base::in | std::ios_base::app);
+    std::ifstream in;
+    in.open(path.toStdString(), std::ios_base::in);
     double tmp;
-    in >> tmp;
+    std::string str;
+    double z = 0;
+    while (!in.eof()) {
+        in >> tmp;
+        z += tmp;
+    }
+
     in.close();
 
-    qDebug() << QString("Reading: %1").arg(QString::number(tmp));
+    qDebug() << QString("Reading: %1").arg(QString::number(z));
 
     mutex.unlock(1);
 
