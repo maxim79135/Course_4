@@ -113,7 +113,9 @@ Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget) {
   needstostop = false;
 
   // Clean up file
-  std::ofstream out(path.toStdString());
+  std::ofstream out;
+  out.open(path.toStdString());
+  out.clear();
   out.flush();
   out.close();
 
