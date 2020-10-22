@@ -12,6 +12,7 @@
 #include <QString>
 #include <QThread>
 #include <QTimer>
+#include <QPropertyAnimation>
 #include <QtConcurrent>
 
 #include "ui_widget.h"
@@ -57,33 +58,42 @@ static unsigned int computeTimeslice(int value) {
 }
 
 static std::vector<SmokerInfo> smokers = {
-    {{SmokeItem{{OFFSET, OFFSET + HAT_SIZE}, SmokeItemTypes::Match},
-      SmokeItem{{OFFSET + PIXMAP_SIZE, OFFSET + HAT_SIZE},
-                SmokeItemTypes::Paper}},
-     SmokeItem{{OFFSET + 2 * PIXMAP_SIZE, OFFSET + HAT_SIZE},
-               SmokeItemTypes::Tobacco},
+    {
+        {
+            SmokeItem{{OFFSET, OFFSET + HAT_SIZE}, SmokeItemTypes::Match},
+            SmokeItem{{OFFSET + PIXMAP_SIZE, OFFSET + HAT_SIZE}, SmokeItemTypes::Paper}
+        },
+        SmokeItem{{OFFSET + 2 * PIXMAP_SIZE, OFFSET + HAT_SIZE}, SmokeItemTypes::Tobacco},
      QPoint{OFFSET, OFFSET},
      0},
-    {{SmokeItem{{OFFSET + HAT_SIZE, SCENE_HEIGHT - (OFFSET + 2 * PIXMAP_SIZE)},
+    {
+        {
+            SmokeItem{{OFFSET + HAT_SIZE, SCENE_HEIGHT - (OFFSET + 2 * PIXMAP_SIZE)},
                 SmokeItemTypes::Paper},
       SmokeItem{{OFFSET + HAT_SIZE, SCENE_HEIGHT - (OFFSET + PIXMAP_SIZE)},
-                SmokeItemTypes::Tobacco}},
+                SmokeItemTypes::Tobacco}
+        },
      SmokeItem{{OFFSET + HAT_SIZE, SCENE_HEIGHT - (OFFSET + 3 * PIXMAP_SIZE)},
                SmokeItemTypes::Match},
      QPoint{OFFSET, SCENE_HEIGHT - (OFFSET + 2 * PIXMAP_SIZE)},
-     1},
-    {{SmokeItem{{SCENE_WIDTH - (OFFSET + 2 * PIXMAP_SIZE),
+     1
+    },
+    {
+        {SmokeItem{{SCENE_WIDTH - (OFFSET + 2 * PIXMAP_SIZE),
                  SCENE_HEIGHT / 2 + HAT_SIZE / 2},
                 SmokeItemTypes::Match},
       SmokeItem{{SCENE_WIDTH - (OFFSET + PIXMAP_SIZE),
                  SCENE_HEIGHT / 2 + HAT_SIZE / 2},
-                SmokeItemTypes::Tobacco}},
+                SmokeItemTypes::Tobacco}
+        },
      SmokeItem{{SCENE_WIDTH - (OFFSET + 3 * PIXMAP_SIZE),
                 SCENE_HEIGHT / 2 + HAT_SIZE / 2},
                SmokeItemTypes::Paper},
      QPoint{SCENE_WIDTH - (OFFSET + 2 * PIXMAP_SIZE),
             SCENE_HEIGHT / 2 - HAT_SIZE / 2},
-     2}};
+     2
+    }
+};
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent), ui(new Ui::Widget), pool(this) {
@@ -110,9 +120,6 @@ void Widget::setupScene() {
   auto *scene = new QGraphicsScene();
 
   view->setScene(scene);
-
-  scene->addRect(0, -20, SCENE_WIDTH, SCENE_HEIGHT + 20);
-  scene->addEllipse(180, 80, 140, 140);
 
   for (const auto &smoker : smokers) {
     // set hat
@@ -294,7 +301,13 @@ void Widget::updateState() {
     scene->addItem(statePixmapItems[i]);
     auto pos = smokerInfo.hatPos;
     pos.setY(pos.y() - 20);
-    statePixmapItems[i]->setPos(pos);
+    //QPropertyAnimation animation((QObject*)statePixmapItems[i], "geometry");
+    //animation.setDuration(10000);
+    //animation.setStartValue(statePixmapItems[i]->pos());
+    //animation.setEndValue(pos);
+    //animation.start();
+    statePixmapItems[i]->moveBy(pos.x(), pos.y());
+    //statePixmapItems[i]->setPos(pos);
   }
 
   for (size_t i = 0; i < 3; ++i) {
