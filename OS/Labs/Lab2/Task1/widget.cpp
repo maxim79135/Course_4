@@ -12,6 +12,7 @@
 #include <QFile>
 #include <QString>
 #include <QtConcurrent>
+#include <QPushButton>
 
 #include "ui_widget.h"
 #include "widget.h"
@@ -41,6 +42,7 @@ public:
 };
 
 static PetersonMutex mutex;
+Widget *widget;
 
 static unsigned int timeout{2000}, timeout2{2000};
 
@@ -63,6 +65,7 @@ static void proc1() {
     out.open(path.toStdString(), std::ios_base::app);
     out << y << "\n";
     out.close();
+    //if (!widget->isVisible()) { widget->show(); qDebug() << "Show widget"; }
 
     mutex.unlock(0);
 
@@ -96,6 +99,13 @@ static void proc2() {
 
 Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget) {
   ui->setupUi(this);
+  widget->show();
+  /*widget = new Widget();
+  widget->setFixedSize(100, 100);
+  QVBoxLayout *layout = new QVBoxLayout(widget);
+  QPushButton *btn = new QPushButton();
+  layout->addWidget(btn);
+  widget->setLayout(layout);*/
 
   connect(ui->slider, &QSlider::valueChanged, this, [](int value) {
     auto value_u = static_cast<unsigned int>(value);
