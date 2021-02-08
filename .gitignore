@@ -3,3 +3,11 @@
 env
 .vscode
 *.pyc
+
+САПР/KOMPAS-3D_LT_V12/
+
+САПР/DipTrace/
+
+САПР/MPLAB_IDE_v8.60/
+
+САПР/PICkit/
