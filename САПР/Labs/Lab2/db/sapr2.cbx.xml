@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<LOG_ROOT>
+	<PROJECT NAME="sapr2">
+		<CBX_INST_ENTRY INSTANCE_NAME="|sapr2|lpm_counter0:inst23|lpm_counter:lpm_counter_component" CBX_FILE_NAME="cntr_plh.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|sapr2|lpm_counter1:inst10|lpm_counter:lpm_counter_component" CBX_FILE_NAME="cntr_bdi.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|sapr2|lpm_counter2:inst1|lpm_counter:lpm_counter_component" CBX_FILE_NAME="cntr_hgj.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|sapr2|single_port_rom:inst|altsyncram:rom_rtl_0" CBX_FILE_NAME="altsyncram_ff71.tdf"/>
+	</PROJECT>
+</LOG_ROOT>

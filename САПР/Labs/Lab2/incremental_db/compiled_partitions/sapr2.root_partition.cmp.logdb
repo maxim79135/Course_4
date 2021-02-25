@@ -1,0 +1,5 @@
+v1
+RAM_PACKING,0,M512,4,4,SimpleDual,0,0,10000000,single_port_rom:inst|altsyncram:rom_rtl_0|altsyncram_ff71:auto_generated|ram_block1a3,
+RAM_PACKING,0,M512,4,4,SimpleDual,0,2,10000000,single_port_rom:inst|altsyncram:rom_rtl_0|altsyncram_ff71:auto_generated|ram_block1a2,
+RAM_PACKING,0,M512,4,4,SimpleDual,0,1,10000000,single_port_rom:inst|altsyncram:rom_rtl_0|altsyncram_ff71:auto_generated|ram_block1a1,
+RAM_PACKING,0,M512,4,4,SimpleDual,0,3,10000000,single_port_rom:inst|altsyncram:rom_rtl_0|altsyncram_ff71:auto_generated|ram_block1a0,
