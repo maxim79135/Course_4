@@ -9,7 +9,7 @@ class Task5: Task3() {
             .fold("", { str, it -> str + "%02x".format(it) })
     }
 
-    fun String.sha256(): String {
+    private fun String.sha256(): String {
         return hashString(this, "SHA-256")
     }
 
