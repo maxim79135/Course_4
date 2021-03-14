@@ -11,3 +11,7 @@ env
 САПР/MPLAB_IDE_v8.60/
 
 САПР/PICkit/
+.idea
+.name
+.gradle
+Data protection/Labs/Lab3/KotlinLab3/build
