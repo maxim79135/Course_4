@@ -14,22 +14,6 @@ class Task5: Task3() {
     }
 
     fun _hash(message: String): String {
-        val zero = 0
-        var hashValue = zero.toBigInteger()
-
-        message.forEachIndexed {
-            i, element ->
-            run {
-                val bigP: BigInteger = p.toBigInteger()
-                val one = 1
-                hashValue = (hashValue + bigP
-                    .multiply(q.toBigInteger())
-                    .modPow(i.toBigInteger(), one.shl(128).toBigInteger())
-                    .multiply(element.toInt().toBigInteger())
-                    .add(one.toBigInteger()))
-                    .and(one.shl(128).toBigInteger().subtract(one.toBigInteger()))
-            }
-        }
         return message.sha256()
     }
 }
