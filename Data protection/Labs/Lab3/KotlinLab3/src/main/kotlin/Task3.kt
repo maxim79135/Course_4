@@ -36,21 +36,21 @@ open class Task3 {
 
     }
 
-fun encrypt(message: String): Array<Int> {
-    var ret = emptyArray<Int>()
-    for (c in message) {
-        val tmp: BigInteger = c.toInt().toBigInteger()
-        ret += tmp.modPow(e.toBigInteger(), n.toBigInteger()).toInt()
+    fun encrypt(message: String): Array<Int> {
+        var ret = emptyArray<Int>()
+        for (c in message) {
+            val tmp: BigInteger = c.toInt().toBigInteger()
+            ret += tmp.modPow(e.toBigInteger(), n.toBigInteger()).toInt()
+        }
+        return ret
     }
-    return ret
-}
 
-fun decrypt(message: Array<Int>): String {
-    var ret = ""
-    for (c in message) {
-        val tmp: BigInteger = c.toBigInteger()
-        ret += tmp.modPow(d.toBigInteger(), n.toBigInteger()).toInt().toChar()
+    fun decrypt(message: Array<Int>): String {
+        var ret = ""
+        for (c in message) {
+            val tmp: BigInteger = c.toBigInteger()
+            ret += tmp.modPow(d.toBigInteger(), n.toBigInteger()).toInt().toChar()
+        }
+        return ret
     }
-    return ret
-}
 }
