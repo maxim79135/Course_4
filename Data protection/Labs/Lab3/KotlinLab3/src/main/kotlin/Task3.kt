@@ -1,7 +1,7 @@
 import java.math.BigInteger
 import kotlin.math.sqrt
 
-class Task3 {
+open class Task3 {
     private val p = 431
     private val q = 307
     private var n = 0
