@@ -1,9 +1,10 @@
+import com.sun.org.apache.xpath.internal.operations.Bool
 import java.math.BigInteger
 import kotlin.math.sqrt
 
 open class Task3 {
-    private val p = 431
-    private val q = 307
+    protected val p = 431
+    protected val q = 307
     private var n = 0
     private var e = 0
     private var d = 0
@@ -36,20 +37,20 @@ open class Task3 {
 
     }
 
-    fun encrypt(message: String): Array<Int> {
+    fun encrypt(message: String, isPubKey: Boolean): Array<Int> {
         var ret = emptyArray<Int>()
         for (c in message) {
             val tmp: BigInteger = c.toInt().toBigInteger()
-            ret += tmp.modPow(e.toBigInteger(), n.toBigInteger()).toInt()
+            ret += tmp.modPow((if (isPubKey) e else d).toBigInteger(), n.toBigInteger()).toInt()
         }
         return ret
     }
 
-    fun decrypt(message: Array<Int>): String {
+    fun decrypt(message: Array<Int>, isPrivKey: Boolean): String {
         var ret = ""
         for (c in message) {
             val tmp: BigInteger = c.toBigInteger()
-            ret += tmp.modPow(d.toBigInteger(), n.toBigInteger()).toInt().toChar()
+            ret += tmp.modPow(((if (isPrivKey) d else e)).toBigInteger(), n.toBigInteger()).toInt().toChar()
         }
         return ret
     }
