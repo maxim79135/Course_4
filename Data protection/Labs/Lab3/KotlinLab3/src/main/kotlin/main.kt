@@ -10,7 +10,7 @@ fun testTask3() {
     val task3 = Task3()
 
     task3.createKeys()
-    val array = task3.encrypt("Max Sedov", true)
+    val array = task3.encrypt("Sedov Maxim", true)
     println(array.toList())
     println(task3.decrypt(array, true))
 }
