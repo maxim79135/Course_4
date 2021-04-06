@@ -49,7 +49,7 @@ static unsigned int timeout{2000}, timeout2{2000};
 static bool needstostop;
 
 static double x = 1;
-static int h = 1;
+static double h = 0.3;
 
 static QString path("output.txt");
 

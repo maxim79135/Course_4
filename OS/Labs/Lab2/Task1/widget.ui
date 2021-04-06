@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>515</width>
-    <height>92</height>
+    <height>100</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <item row="1" column="2">
     <widget class="QLabel" name="label_2">
      <property name="text">
-      <string>Медленно</string>
+      <string>0</string>
      </property>
     </widget>
    </item>
@@ -28,24 +28,17 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Быстро</string>
-     </property>
-    </widget>
-   </item>
    <item row="3" column="0">
     <widget class="QLabel" name="label_3">
      <property name="text">
-      <string>Быстро</string>
+      <string>100</string>
      </property>
     </widget>
    </item>
    <item row="3" column="2">
     <widget class="QLabel" name="label_4">
      <property name="text">
-      <string>Медленно</string>
+      <string>0</string>
      </property>
     </widget>
    </item>
@@ -59,14 +52,21 @@
    <item row="0" column="0" colspan="3">
     <widget class="QLabel" name="label_5">
      <property name="text">
-      <string>1-й поток пишет случайную строку в файл output.txt</string>
+      <string>1-й поток пишет значение функции в файл output.txt</string>
      </property>
     </widget>
    </item>
    <item row="2" column="0" colspan="3">
     <widget class="QLabel" name="label_6">
      <property name="text">
-      <string>2-й поток пишет в файл output.txt его собственный размер в байтах</string>
+      <string>2-й поток считывает очередное значение функции из output.txt</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>100</string>
      </property>
     </widget>
    </item>
