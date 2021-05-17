@@ -1,0 +1,30 @@
+main
+	__CC2D
+	init
+		outcw
+		outd
+			translate
+	clear_lcd
+		outcw
+		outd
+			translate
+	read_string
+		rd_EEPROM
+	rd_EEPROM
+	ScanKbd
+	reset_string
+		move_left_string
+	outcw
+	show_string
+		outd
+			translate
+	write_string
+		wr_EEPROM
+	len
+	clear_string
+	move_right_string
+	Mul_16x16
+	DelayMs
+INT1_Interrupt
+INT0_Interrupt
+Timer1InterruptHandler
